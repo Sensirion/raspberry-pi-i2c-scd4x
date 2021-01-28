@@ -1,7 +1,6 @@
 stages:
   - validate
   - build
-  - test
 
 syntax_check:
   stage: validate
@@ -27,12 +26,3 @@ build:
   tags: [linux, docker]
   script:
     - make
-
-test:
-  stage: test
-  image: registry.gitlab.sensirion.lokal/sensirion/docker/docker-rpi-testbed:1.2.0
-  tags: [mso-sw-testbed-2]
-  script:
-    - git clone -b 3.0.0 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab/MSO-SW/drivers/testbed/i2c-mux-testbed.git
-    - cd tests/
-    - make test
