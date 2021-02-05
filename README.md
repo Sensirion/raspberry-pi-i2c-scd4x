@@ -6,7 +6,8 @@ using the provided code.
 
 [<center><img src="images/SCD41_Development_Board.png" width="300px"></center>](https://sensirion.com/my-scd-ek)
 
-Click [here](https://sensirion.com/my-scd-ek) to learn more about the SCD4x Sensor and the SCD41 Evaluation Kit Board.
+Click [here](https://sensirion.com/my-scd-ek) to learn more about the SCD4x
+sensor and the SCD41 Evaluation Kit Board.
 
 
 Setup Guide
@@ -30,9 +31,10 @@ the following pins to connect your SCD4x:
 
 - [Install the Raspberry Pi OS on to your Raspberry Pi](https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up)
 - [Enable the I2C interface in the raspi-config](https://www.raspberrypi.org/documentation/configuration/raspi-config.md)
-- Download the driver for the [Sensirion Github Page](https://github.com/Sensirion/raspberry-pi-i2c-scd4x) and extract the `.zip` on your Raspberry Pi
+- Download the driver from the [Sensirion GitHub Page](https://github.com/Sensirion/raspberry-pi-i2c-scd4x/tags)
+  and extract the `.zip` on your Raspberry Pi
 - Compile the driver
-    1. Open a [terminal](https://www.raspberrypi.org/documentation/usage/terminal/?)
+    1. Open a [terminal](https://www.raspberrypi.org/documentation/usage/terminal/)
     2. Navigate to the driver directory. E.g. `cd ~/raspberry-pi-i2c-scd4x`
     3. Run the `make` command to compile the driver
 
