@@ -56,13 +56,13 @@ extern "C" {
 int16_t scd4x_start_periodic_measurement(void);
 
 /**
- * scd4x_read_measurement() - read sensor output. The measurement data can only
- * be read out once per signal update interval as the buffer is emptied upon
- * read-out. If no data is available in the buffer, the sensor returns a NACK.
- * To avoid a NACK response the get_data_ready_status can be issued to check
- * data status. The I2C master can abort the read transfer with a NACK followed
- * by a STOP condition after any data byte if the user is not interested in
- * subsequent data.
+ * scd4x_read_measurement_ticks() - read sensor output. The measurement data can
+ * only be read out once per signal update interval as the buffer is emptied
+ * upon read-out. If no data is available in the buffer, the sensor returns a
+ * NACK. To avoid a NACK response the get_data_ready_status can be issued to
+ * check data status. The I2C master can abort the read transfer with a NACK
+ * followed by a STOP condition after any data byte if the user is not
+ * interested in subsequent data.
  *
  * @note This command is only available in measurement mode. The firmware
  * updates the measurement values depending on the measurement mode.
@@ -75,8 +75,26 @@ int16_t scd4x_start_periodic_measurement(void);
  *
  * @return 0 on success, an error code otherwise
  */
-int16_t scd4x_read_measurement(uint16_t* co2, uint16_t* temperature,
-                               uint16_t* humidity);
+int16_t scd4x_read_measurement_ticks(uint16_t* co2, uint16_t* temperature,
+                                     uint16_t* humidity);
+
+/**
+ * scd4x_read_measurement() - read sensor output and convert.
+ * See @ref scd4x_read_measurement_ticks() for more details.
+ *
+ * @note This command is only available in measurement mode. The firmware
+ * updates the measurement values depending on the measurement mode.
+ *
+ * @param co2 CO₂ concentration in ppm
+ *
+ * @param temperature_deg_c Temperature in degrees Celsius (°C)
+ *
+ * @param humidity_percent_rh Relative humidity in percent RH
+ *
+ * @return 0 on success, an error code otherwise
+ */
+int16_t scd4x_read_measurement(uint16_t* co2, float* temperature_deg_c,
+                               float* humidity_percent_rh);
 
 /**
  * scd4x_stop_periodic_measurement() - Stop periodic measurement and return to
@@ -89,7 +107,7 @@ int16_t scd4x_read_measurement(uint16_t* co2, uint16_t* temperature,
 int16_t scd4x_stop_periodic_measurement(void);
 
 /**
- * scd4x_get_temperature_offset() - The temperature offset represents the
+ * scd4x_get_temperature_offset_ticks() - The temperature offset represents the
  * difference between the measured temperature by the SCD4x and the actual
  * ambient temperature. Per default, the temperature offset is set to 4°C.
  *
@@ -100,7 +118,37 @@ int16_t scd4x_stop_periodic_measurement(void);
  *
  * @return 0 on success, an error code otherwise
  */
-int16_t scd4x_get_temperature_offset(uint16_t* t_offset);
+int16_t scd4x_get_temperature_offset_ticks(uint16_t* t_offset);
+
+/**
+ * scd4x_get_temperature_offset() - The temperature offset represents the
+ * difference between the measured temperature by the SCD4x and the actual
+ * ambient temperature. Per default, the temperature offset is set to 4°C.
+ *
+ * @note Only available in idle mode.
+ *
+ * @param t_offset_deg_c Temperature offset in degrees Celsius (°C)
+ *
+ * @return 0 on success, an error code otherwise
+ */
+int16_t scd4x_get_temperature_offset(float* t_offset_deg_c);
+
+/**
+ * scd4x_set_temperature_offset_ticks() - Setting the temperature offset of the
+ * SCD4x inside the customer device correctly allows the user to leverage the RH
+ * and T output signal. Note that the temperature offset can depend on various
+ * factors such as the SCD4x measurement mode, self-heating of close components,
+ * the ambient temperature and air flow. Thus, the SCD4x temperature offset
+ * should  be determined inside the customer device under its typical operation
+ * and in thermal equilibrium.
+ *
+ * @note Only available in idle mode.
+ *
+ * @param t_offset Temperature offset. Convert °C to value by: T * 2^16 / 175.
+ *
+ * @return 0 on success, an error code otherwise
+ */
+int16_t scd4x_set_temperature_offset_ticks(uint16_t t_offset);
 
 /**
  * scd4x_set_temperature_offset() - Setting the temperature offset of the SCD4x
@@ -113,11 +161,11 @@ int16_t scd4x_get_temperature_offset(uint16_t* t_offset);
  *
  * @note Only available in idle mode.
  *
- * @param t_offset Temperature offset. Convert °C to value by: T * 2^16 / 175.
+ * @param t_offset_deg_c Temperature offset in degrees Celsius (°C)
  *
  * @return 0 on success, an error code otherwise
  */
-int16_t scd4x_set_temperature_offset(uint16_t t_offset);
+int16_t scd4x_set_temperature_offset(float t_offset_deg_c);
 
 /**
  * scd4x_get_sensor_altitude() - Get configured sensor altitude in meters above
@@ -222,15 +270,14 @@ int16_t scd4x_get_data_ready_status(uint16_t* data_ready);
  * scd4x_persist_settings() - Configuration settings such as the temperature
  * offset, sensor altitude and the ASC enabled/disabled parameter are by default
  * stored in the volatile memory (RAM) only and will be lost after a
- * power-cycle. This command stores the current configuration in the EEPROM of
- * the SCD4x, making them persistent across power-cycling.
- *
- * @note To avoid unnecessary wear of the EEPROM, this command should only be
+ * power-cycle. The persist_settings command stores the current configuration in
+ * the EEPROM of the SCD4x, making them resistant to power-cycling. To avoid
+ * unnecessary wear of the EEPROM, the persist_settings command should only be
  * sent when persistence is required and if actual changes to the configuration
- * have been made (The EEPROM is guaranteed to endure at least 2000 write cycles
- * before failure). Note that field calibration history (i.e. FRC and ASC) is
- * automatically stored in a separate EEPROM dimensioned for specified sensor
- * lifetime.
+ * have been made. Note that field calibration history (i.e. FRC and ASC) is
+ * stored in the EEPROM automatically.
+ *
+ * @note
  *
  * @return 0 on success, an error code otherwise
  */
@@ -266,13 +313,6 @@ int16_t scd4x_perform_self_test(uint16_t* sensor_status);
 /**
  * scd4x_perform_factory_reset() - Initiates the reset of all configurations
  * stored in the EEPROM and erases the FRC and ASC algorithm history.
- *
- * @note To avoid unnecessary wear of the EEPROM, this command should only be
- * sent when actual changes to the configuration have been made which should be
- * reverted (The EEPROM is guaranteed to endure at least 2000 write cycles
- * before failure). Note that field calibration history (i.e. FRC and ASC) is
- * automatically stored in a separate EEPROM dimensioned for specified sensor
- * lifetime.
  *
  * @return 0 on success, an error code otherwise
  */
