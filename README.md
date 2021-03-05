@@ -1,5 +1,4 @@
-Getting Started on Raspberry Pi
-===============================
+# Sensirion Raspberry Pi I2C SCD4x Driver
 
 This document explains how to set up the SCD4x sensor to run on a Raspberry Pi
 using the provided code.
@@ -9,9 +8,7 @@ using the provided code.
 Click [here](https://sensirion.com/my-scd-ek) to learn more about the SCD4x
 sensor and the SCD41 Evaluation Kit Board.
 
-
-Setup Guide
------------
+## Setup Guide
 
 ### Connecting the Sensor
 
