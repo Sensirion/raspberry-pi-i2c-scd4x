@@ -12,11 +12,15 @@ endif
 
 .PHONY: all clean
 
-all: scd4x_i2c_example_usage
+all: scd4x_i2c_example_usage scd4x_i2c_json
 
 scd4x_i2c_example_usage: clean
 	$(CC) $(CFLAGS) -o $@  ${scd4x_sources} ${i2c_sources} \
 		${i2c_implementation} ${common_sources} scd4x_i2c_example_usage.c
 
+scd4x_i2c_json: clean
+	$(CC) $(CFLAGS) -o $@  ${scd4x_sources} ${i2c_sources} \
+		${i2c_implementation} ${common_sources} scd4x_i2c_json.c
+
 clean:
-	$(RM) scd4x_i2c_example_usage
+	$(RM) scd4x_i2c_example_usages scd4x_i2c_json
