@@ -260,11 +260,11 @@ int16_t scd4x_start_low_power_periodic_measurement(void);
  * scd4x_get_data_ready_status() - Check whether new measurement data is
  * available for read-out.
  *
- * @param data_ready If last 11 bits are 0 data not ready, else data ready
+ * @param data_ready_flag true if data is available, false otherwise.
  *
  * @return 0 on success, an error code otherwise
  */
-int16_t scd4x_get_data_ready_status(uint16_t* data_ready);
+int16_t scd4x_get_data_ready_flag(bool* data_ready_flag);
 
 /**
  * scd4x_persist_settings() - Configuration settings such as the temperature
