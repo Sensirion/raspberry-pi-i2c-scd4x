@@ -91,8 +91,8 @@ int16_t scd4x_read_measurement(uint16_t* co2, float* temperature_deg_c,
     if (error) {
         return error;
     }
-    *temperature_deg_c = (float)temperature * 175.0f / 65536.0f - 45.0f;
-    *humidity_percent_rh = (float)humidity * 100.0f / 65536.0f;
+    *temperature_deg_c = (float)temperature * 175.0f / 65535.0f - 45.0f;
+    *humidity_percent_rh = (float)humidity * 100.0f / 65535.0f;
     return NO_ERROR;
 }
 
