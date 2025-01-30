@@ -518,8 +518,7 @@ int16_t scd4x_persist_settings() {
     return local_error;
 }
 
-int16_t scd4x_get_serial_number(uint16_t* serial_number,
-                                uint16_t serial_number_size) {
+int16_t scd4x_get_serial_number(uint64_t* serial_number) {
     int16_t local_error = NO_ERROR;
     uint8_t* buffer_ptr = communication_buffer;
     uint16_t local_offset = 0;
@@ -535,8 +534,8 @@ int16_t scd4x_get_serial_number(uint16_t* serial_number,
     if (local_error != NO_ERROR) {
         return local_error;
     }
-    sensirion_common_copy_bytes(&buffer_ptr[0], (uint8_t*)serial_number,
-                                (serial_number_size * 2));
+    sensirion_common_to_integer(&buffer_ptr[0], (uint8_t*)serial_number,
+                                LONG_INTEGER, 6);
     return local_error;
 }
 

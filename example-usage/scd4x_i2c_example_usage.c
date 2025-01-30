@@ -43,20 +43,12 @@
 
 #define sensirion_hal_sleep_us sensirion_i2c_hal_sleep_usec
 
-void print_ushort_array(uint16_t* array, uint16_t len) {
-    uint16_t i = 0;
-    printf("0x");
-    for (; i < len; i++) {
-        printf("%04x", array[i]);
-    }
-}
-
 int main(void) {
     int16_t error = NO_ERROR;
     sensirion_i2c_hal_init();
     scd4x_init(SCD41_I2C_ADDR_62);
 
-    uint16_t serial_number[3] = {0};
+    uint64_t serial_number = 0;
     sensirion_hal_sleep_us(30000);
     // Ensure sensor is in clean state
     error = scd4x_wake_up();
@@ -72,14 +64,12 @@ int main(void) {
         printf("error executing reinit(): %i\n", error);
     }
     // Read out information about the sensor
-    error = scd4x_get_serial_number(serial_number, 3);
+    error = scd4x_get_serial_number(&serial_number);
     if (error != NO_ERROR) {
         printf("error executing get_serial_number(): %i\n", error);
         return error;
     }
-    printf("serial number: ");
-    print_ushort_array(serial_number, 3);
-    printf("\n");
+    printf("serial number: 0x%" PRIx64 "\n", serial_number);
     //
     // If temperature offset and/or sensor altitude compensation
     // is required, you should call the respective functions here.

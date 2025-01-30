@@ -633,14 +633,14 @@ int16_t scd4x_persist_settings();
  * constitute a unique serial number with a length of 48 bits (in big endian
  * format).
  *
- * @param[out] serial_number 48-bit unique serial number of the sensor.
+ * @param[out] serial_number 48-bit unique serial number of the sensor as a
+ * uint64_t.
  *
  * @note This command is only available in idle mode.
  *
  * @return error_code 0 on success, an error code otherwise.
  */
-int16_t scd4x_get_serial_number(uint16_t* serial_number,
-                                uint16_t serial_number_size);
+int16_t scd4x_get_serial_number(uint64_t* serial_number);
 
 /**
  * @brief Perform self test to assess sensor functionality and power supply.
