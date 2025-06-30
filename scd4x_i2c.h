@@ -46,6 +46,7 @@ extern "C" {
 #include "sensirion_config.h"
 #define SCD40_I2C_ADDR_62 0x62
 #define SCD41_I2C_ADDR_62 0x62
+#define SCD43_I2C_ADDR_62 0x62
 
 typedef enum {
     SCD4X_START_PERIODIC_MEASUREMENT_CMD_ID = 0x21b1,
@@ -81,9 +82,11 @@ typedef enum {
 } SCD4X_CMD_ID;
 
 typedef enum {
-    SCD4X_SENSOR_VARIANT_UNKNOWN = 0,
-    SCD4X_SENSOR_VARIANT_SCD40 = 1,
-    SCD4X_SENSOR_VARIANT_SCD41 = 2,
+    SCD4X_SENSOR_VARIANT_MASK = 0xF000,
+    SCD4X_SENSOR_VARIANT_SCD40 = 0x0000,
+    SCD4X_SENSOR_VARIANT_SCD41 = 0x1000,
+    SCD4X_SENSOR_VARIANT_SCD42 = 0x2000,
+    SCD4X_SENSOR_VARIANT_SCD43 = 0x5000
 } scd4x_sensor_variant;
 
 /**
@@ -686,7 +689,7 @@ int16_t scd4x_reinit();
  * @brief Reads out the SCD4x sensor variant.
  *
  * @param[out] sensor_variant Bits[15…12] = 0000 → SCD40 Bits[15…12] = 0001 →
- * SCD41
+ * SCD41 Bits[15…12] = 0101 → SCD43
  *
  * @note This command is only available in idle mode.
  *
