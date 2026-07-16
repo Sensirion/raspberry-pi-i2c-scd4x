@@ -2,9 +2,9 @@
 
 The repository provides a driver for setting up a sensor of the SCD4X family to run on a Raspberry Pi over I²C.
 
-<img src="images/SCD41.png" width="300px">
+<img src="images/SCD4x.png" width="300px">
 
-Click [here](https://sensirion.com/products/catalog/SEK-SCD41) to learn more about the Sensirion SCD4X sensor family.
+Click [here](https://sensirion.com/products/catalog/SEK-SCD43) to learn more about the Sensirion SCD4X sensor family.
 
 
 Not all sensors of this driver family support all measurements.
@@ -19,23 +19,24 @@ support it are listed in the API description.
 | ------------- | -------------- |
 |[SCD40](https://sensirion.com/products/catalog/SCD40)| **0x62**|
 |[SCD41](https://sensirion.com/products/catalog/SCD41)| **0x62**|
+|[SCD42](https://sensirion.com/products/catalog/SCD42)| **0x62**|
 |[SCD43](https://sensirion.com/products/catalog/SCD43)| **0x62**|
 
-The following instructions and examples use a *SCD41*.
+The following instructions and examples use a *SCD43*.
 
 
 
 ## Connect the sensor
 
-Your sensor has 4 different connectors: SCL, GND, VDD, SDA.
+Your sensor has 4 different connectors: GND, VDD, SDA, SCL.
 Use the following pins to connect your SCD4X:
 
 | *SCD4X* | *Cable Color*  |   *Raspberry Pi*   |
 | :----------------: | -------------- | ------------------ |
-| SCL | yellow | Pin 5
 | GND | black | Pin 6
 | VDD | red | Pin 1
-| SDA | green | Pin 3
+| SDA | green or blue | Pin 3
+| SCL | yellow | Pin 5
 
 
 <img src="images/raspi-i2c-pinout-3.3V.png" width="400px">
@@ -43,14 +44,14 @@ Use the following pins to connect your SCD4X:
 
 ### Detailed sensor pinout
 
-<img src="images/SCD41_pinout.png" width="300px">
+<img src="images/SCD4x_pinout.png" width="300px">
 
 | *Pin* | *Cable Color* | *Name* | *Description*  | *Comments* |
 |-------|---------------|:------:|----------------|------------|
-| 1 | yellow | SCL | I2C: Serial clock input |
-| 2 | black | GND | Ground |
-| 3 | red | VDD | Supply Voltage | 2.4V to 5.5V
-| 4 | green | SDA | I2C: Serial data input / output |
+| 1 | black | GND | Ground |
+| 2 | red | VDD | Supply Voltage | 2.4V to 5.5V
+| 3 | green or blue | SDA | I2C: Serial data input / output |
+| 4 | yellow | SCL | I2C: Serial clock input |
 
 
 
@@ -60,7 +61,7 @@ Use the following pins to connect your SCD4X:
 - [Enable the I²C interface in the raspi-config](https://www.raspberrypi.org/documentation/configuration/raspi-config.md)
 - Download the SCD4X driver from [Github](https://github.com/Sensirion/raspberry-pi-i2c-scd4x) and extract the `.zip` on your Raspberry Pi
 - Connect the SCD4X sensor as explained in the [section above](#connect-the-sensor)
-- The provided example is working with a SCD41, I²C address 0x62.
+- The provided example is working with a SCD43, I²C address 0x62.
   In order to use the code with another product or I²C address you need to change it in the call scd4x_init(ADDRESS) in
   `scd4x_i2c_example_usage.c`. The list of supported I²C-addresses is found in the header
   `scd4x_i2c.h`.
